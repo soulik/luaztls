@@ -1,0 +1,4 @@
+luaztls {
+	global: luaopen_luaztls;
+	local: *;
+};

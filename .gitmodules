@@ -1,0 +1,6 @@
+[submodule "dependencies/ztls"]
+	path = dependencies/ztls
+	url = https://github.com/soulik/ztls.git
+[submodule "dependencies/lutok2"]
+	path = dependencies/lutok2
+	url = https://github.com/soulik/lutok2
