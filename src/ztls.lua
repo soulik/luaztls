@@ -6,6 +6,8 @@ local M = {}
 M.client = function(a,b,c)
 	local context, zmq_context, data_endpoint, control_endpoint
 
+	local destroyed = false
+
 	if type(a)=='string' then
 		data_endpoint, control_endpoint = a,b
 		context = ztls.clientNew(data_endpoint, control_endpoint)
@@ -17,8 +19,8 @@ M.client = function(a,b,c)
 	assert(context, "Can't create ZTLS Context")
 	
 	local lfn = {
-		connect = function(hostname, port)
-			assert(ztls.clientConnect(context, hostname, port))
+		connect = function(hostname, port, debug_level)
+			assert(ztls.clientConnect(context, hostname, port, debug_level or 0))
 		end,
 		CAChain = function(CAChain)
 			assert(ztls.clientCAChain(context, CAChain))
@@ -33,10 +35,13 @@ M.client = function(a,b,c)
 		return lfn[fn]
 	end
 	mt.__gc = function()
-		assert(ztls.clientDestroy(context))
+		if not destroyed then
+			assert(ztls.clientDestroy(context))
+			destroyed = true
+		end
 	end
-	return context
 
+	return context
 end
 
 

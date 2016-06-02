@@ -100,7 +100,13 @@ namespace LuaZTLS {
 		if (state.stack->is<LUA_TUSERDATA>(1) && stack->is<LUA_TSTRING>(2) && stack->is<LUA_TNUMBER>(3)){
 			const std::string hostname = stack->to<const std::string>(2);
 			uint16_t port = stack->to<int>(3);
-			bool result = ztls_client_connect(getZTLSobject(1), hostname.c_str(), port);
+			bool result = false;
+			if (stack->is<LUA_TNUMBER>(4)){
+				result = ztls_client_connect(getZTLSobject(1), hostname.c_str(), port, stack->to<int>(4));
+			}
+			else{
+				result = ztls_client_connect(getZTLSobject(1), hostname.c_str(), port);
+			}
 			state.stack->push<bool>(result);
 			return 1;
 		}
